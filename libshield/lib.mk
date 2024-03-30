@@ -1,0 +1,6 @@
+
+UDEFS += -DUSE_MBEDSHIELD
+
+LIBSHIELD = libshield
+
+SRC += $(LIBSHIELD)/lm75.c $(LIBSHIELD)/mma7660.c
