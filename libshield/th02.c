@@ -1,7 +1,6 @@
-#include "th02.h"
 #include "lib/i2c.h"
 
-
+#include "libshield/th02.h"
 void IIC_WriteCmd(uint8_t u8Cmd) {
     uint8_t data[2];
     data[0] = u8Cmd;
@@ -18,11 +17,29 @@ uint8_t IIC_ReadReg(uint8_t u8Reg) {
     return data;
 }
 
-void IIC_WriteReg(uint8_t u8Reg, uint8_t u8Data){
+void IIC_WriteReg(uint8_t u8Reg, uint8_t u8Data) {
     uint8_t data[2];
     data[0] = u8Reg;
     data[1] = u8Data;
-    i2c_write(I2C1, TH02_ADDRESS, data, 2);
+    int result = i2c_write(I2C1, TH02_ADDRESS, data, 2);
+    if (result != I2C_OK) {
+        // Handle write error
+        switch (result) {
+            case I2C_ERROR:
+                //printf("I2C error: general error occurred.\n");
+                // Log or handle the error appropriately
+                break;
+            case I2C_BUSY:
+                //printf("I2C error: bus is busy.\n");
+                // Log or handle the error appropriately
+                break;
+            // Add more cases for other possible error codes if needed
+            default:
+                //printf("I2C error: unknown error occurred.\n");
+                // Log or handle the error appropriately
+                break;
+        }
+    }
 }
 
 uint8_t isAvailable() {
@@ -34,45 +51,48 @@ uint8_t isAvailable() {
     }
 }
 
-void TH02_begin() {
+int TH02_begin() {
     // Initialize I2C interface
     if (i2c_master_init(I2C1) != I2C_OK) {
         // Handle initialization error
-        return;
-    }
-    // Now, you need to initialize the TH02 sensor
+        return -1;
+    } 
     // Write initialization sequence to configure TH02 sensor
     uint8_t config_data[2] = {REG_CONFIG, TH02_ADDRESS}; // Assuming u8Reg contains the configuration data
     if (i2c_write(I2C1, TH02_ADDRESS, config_data, 2) != I2C_OK) {
         // Handle write error
-        return;
+        return -1;
     }
+    // Configuration successful
+    return 1;
 }
 
-
 float TH02_ReadTemperature(void) {
-    uint8_t cmd = CMD_MEASURE_TEMP;
-    uint8_t data[3];
+    uint8_t config_data[1] = {REG_CONFIG};
+    uint8_t temperature_data[3]; // Buffer to store temperature data
 
-    // Start a new temperature conversion
-    i2c_write(_I2C1, TH02_ADDRESS, &cmd, 1);
+    // Send the address pointer write sequence (slave address + write)
+    if (i2c_write(_I2C1, TH02_ADDRESS, config_data, 1) != I2C_OK) {
+        // Handle write error
+        uart_printf(_USART2, "Error writing address pointer to TH02 sensor.\n");
+        return 0.0f; // Return an error value or handle the error appropriately
+    }
 
-    // Wait until conversion is done
-    while (!isAvailable());
+    // Read the temperature data from the TH02 sensor
+    if (i2c_read(_I2C1, TH02_ADDRESS, temperature_data, 3) != I2C_OK) {
+        // Handle read error
+        uart_printf(_USART2, "Error reading temperature data from TH02 sensor.\n");
+        return 0.0f; // Return an error value or handle the error appropriately
+    }
 
-    // Read temperature data from TH02 sensor
-    i2c_read(_I2C1, TH02_ADDRESS, data, 3);
-
+    // Combine the two bytes to form the raw temperature value
+    int16_t raw_temp = (temperature_data[1] << 8) | temperature_data[2];
+    uart_printf(_USART2, "Temperature: %d\n", raw_temp);
     // Convert raw temperature data to temperature value
-    uint16_t value = (data[0] << 8) | data[1];
-    value = value >> 2;
+    float temperature = raw_temp / 32.0f - 50.0f;
 
-    /*
-        Formula:
-        Temperature(C) = (Value/32) - 50
-    */
-
-    float temperature = (value / 32.0) - 50.0;
+    // Print the temperature value
+    uart_printf(_USART2, "Temperature: %f\n", temperature);
 
     return temperature;
 }

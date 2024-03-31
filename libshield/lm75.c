@@ -8,30 +8,36 @@
 #define LM75_REG_TOS		(0x03)
 #define LM75_REG_NONE		(0x04)
 
+
 static uint8_t last_reg = LM75_REG_NONE;
+//lire le registre de température,renvoie val signée codée en virgule fixe au format [29:3].
+int  lm75_read_temp(int *temp)
+{
+	uint8_t buffer [2];
+	int st;
 
-
-// int  lm75_read_temp(int *temp)
-// {
-// 	uint8_t buffer [2];
-// 	int st;
-
-//     if (last_reg!=LM75_REG_TEMP) {
-// 		buffer [0] = last_reg = LM75_REG_TEMP;
-// 		//i2c_write_read(I2C_t *i2c, uint8_t addr, uint8_t* buf, uint32_t nwr, uint32_t nrd)
-// 		st = i2c_write_read(_I2C1, LM75_ADDRESS, buffer, 1, 2);
-// 	} else {
-// 		st = i2c_read(_I2C1, LM75_ADDRESS, buffer, 2);
-// 	}
-	
-// 	if (st==I2C_OK) {
-// 		//  Sign extend negative numbers
+	if (last_reg!=LM75_REG_TEMP) {
+		buffer [0] = last_reg = LM75_REG_TEMP;
+		st = i2c_write(_I2C1, LM75_ADDRESS, buffer, 1);
+		if(st==I2C_ERROR) return -1;
+	} else {
+		st = i2c_read(_I2C1,LM75_ADDRESS,buffer,2);
+		if(st==I2C_ERROR) return -1;
+	}
+	if (st==I2C_OK) {
+		lcd_reset();
+		cls();
+		lcd_printf("OK");
+		//  Sign extend negative numbers
+		if (buffer[0] & 0x80)
+		{
+			buffer[0] |=0xFFFFFF00;
+		}
+		*temp = ((buffer[0] << 3) | (buffer[1] >> 5))/(1<<3);
 		
-// 		/* A COMPLETER */
 
-// 	} else {
-// 		*temp=0;
-// 	}
-// 	return st;
-// }
-
+	} else {
+		*temp=0;
+	}
+	return st;
+}

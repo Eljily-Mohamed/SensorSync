@@ -26,7 +26,7 @@
 /***        fonctions Definition                                              ***/
 /****************************************************************************/
 
-    void TH02_begin();
+    int TH02_begin();
     uint8_t isAvailable();
     float TH02_ReadTemperature(void);
     // float ReadHumidity(void);
@@ -35,8 +35,8 @@
     uint8_t IIC_ReadReg(uint8_t u8Reg);
     void IIC_WriteReg(uint8_t u8Reg, uint8_t u8Data);
     
-    // uint16_t IIC_ReadData(uint8_t u8Reg,uint8_t num);
-    // uint16_t IIC_ReadData2byte(uint8_t u8Reg,uint8_t num);	
+    //uint16_t IIC_ReadData(uint8_t u8Reg,uint8_t num);
+    //uint16_t IIC_ReadData2byte(uint8_t u8Reg,uint8_t num);	
 
 
 #endif

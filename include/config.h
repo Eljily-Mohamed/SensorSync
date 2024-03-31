@@ -160,7 +160,6 @@
  *  I2C Pin and use configuration:
  ****************************************************************************/
 
-#ifdef USE_MBEDSHIELD
 // I2C1 : SCL --> PB8, SDA --> PB9
 #define USE_I2C1
 #define I2C1_GPIO_PORT		_GPIOB
@@ -170,7 +169,7 @@
 //#define I2C1_GPIO_PORT	
 //#define I2C1_GPIO_PINS	
 //#define I2C1_GPIO_CFG		
-#endif
+
 
 //#define USE_I2C2
 //#define I2C2_GPIO_PORT
