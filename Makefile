@@ -20,7 +20,7 @@ UADEFS =
 # List C source files here
 SRC  = startup/stm32f411_periph.c startup/sys_handlers.c startup/rcc.c \
        startup/system_stm32f4xx.c \
-       lib/i2c.c \
+       lib/i2c.c libshield/th02.c \
        src/${PROJ}.c
 
 # List ASM source files here
