@@ -33,14 +33,10 @@ int main(void)
 		while (!cmd) ;
 		switch (cmd) {
 		case 't': // get current temperature
-			lm75_read_temp(&temp);
-			cmd=0;
-		/*	if (lm75_read_temp(&temp)==-1)
-			{
-				uart_puts(_USART2,"\r\nErreur I2C\r\n");
-			}
+			th02_read_temp(&temp);
+			// cmd=0;
 			PE=temp>>3;
-			PF=(temp&0x7)*1000/8;*/
+			PF=(temp&0x7)*1000/8;
 			uart_printf(_USART2,"\n\rLa température est %d.%d°C",PE,PF); //temp,temp
 			break;
 		default:
