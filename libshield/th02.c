@@ -40,9 +40,9 @@ int th02_read_temp(int *temp) {
         delay_ms(35); 
         // Read sequence
         // Extract temperature value and convert to °C
-        for(int i = 0; i <  2; i++){
-            uart_printf(_USART2,"\r\ndata[%d] = %d",i,buffer[i]);
-        }
+        // for(int i = 0; i <  2; i++){
+        //     uart_printf(_USART2,"\r\ndata[%d] = %d",i,buffer[i]);
+        // }
         uint16_t value = ((buffer[1] << 8) | buffer[0]) >> 2;
         *temp = (value / 32) - 50;
     } else {
