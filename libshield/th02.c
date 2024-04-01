@@ -1,6 +1,8 @@
 #include "lib/i2c.h"
-
 #include "libshield/th02.h"
+
+#define delay_us(us)        timer_wait_us(_TIM3, us)
+
 
 void th02_begin() {
     // Initialize I2C interface
@@ -18,35 +20,34 @@ void th02_begin() {
     return;
 }
 
-// Function to read temperature from TH02 sensor
+
 int th02_read_temp(int *temp) {
-    // Set configuration for temperature measurement
-    if (i2c_write(I2C1, TH02_ADDRESS,REG_CONFIG, 1) != I2C_OK) {
-        return -1; // Error writing to configuration register
-    }
-    if (i2c_write(I2C1, TH02_ADDRESS,CMD_MEASURE_TEMP, 1) != I2C_OK) {
-        return -1; // Error writing configuration data
+    // I2C configuration
+    if (i2c_master_init(I2C1) != I2C_OK) {
+        // Handle I2C initialization error
+        return -1;
     }
 
-    // Poll RDY bit in STATUS register until it becomes low
-    uint8_t status;
-    do {
-        if (i2c_read(I2C1, TH02_ADDRESS,REG_STATUS, 1) != I2C_OK) {
-            return -1; // Error reading status register
-        }
-        status &= 0x01; // Mask RDY bit
-    } while (status != 0);
-
-    // Read temperature data
-    uint8_t temp_data[2];
-    if (i2c_read(I2C1, TH02_ADDRESS,REG_DATA_H,2) != I2C_OK) {
-        return -1; // Error reading temperature data
+    // Start sequence
+    uint8_t config_data[2] = {REG_CONFIG, 0x11}; // Write CONFIG register (0x03) with 0x11
+    if (i2c_write(I2C1, TH02_ADDRESS, config_data, 2) != I2C_OK) {
+        // Handle I2C write error
+        return -1;
     }
-    
-    // Convert temperature data to Celsius
-    uart_printf(_USART2,"\n\rLa température est %d",temp_data[0]);
-    int16_t raw_temp = (temp_data[0] << 8) | temp_data[1];
-    *temp = (int)((raw_temp / 32.0) - 50.0);
+
+    // Delay for temperature conversion
+    delay_us(35); 
+
+    // Read sequence
+    uint8_t data_buffer[2];
+    if (i2c_read(I2C1, TH02_ADDRESS, data_buffer, 2) != I2C_OK) {
+        // Handle I2C read error
+        return -1;
+    }
+
+    // Extract temperature value and convert to °C
+    uint16_t value = ((data_buffer[1] << 8) | data_buffer[0]) >> 4;
+    *temp = (value / 32) - 50;
 
     return 0; // Success
 }
