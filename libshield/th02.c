@@ -29,9 +29,13 @@ int th02_read_temp(int *temp) {
     uint8_t config_data[2] = {REG_CONFIG,CMD_MEASURE_TEMP}; // Write CONFIG register (0x03) with 0x11
     st = i2c_write(I2C1, TH02_ADDRESS, config_data, 2);
     if(st==I2C_ERROR) return -1;
+      
+    delay_ms(40);
+
+    // Read 2 bytes of data
     st = i2c_read(I2C1, TH02_ADDRESS,buffer, 2);
     if(st==I2C_ERROR) return -1;
     uint16_t value = ((buffer[1] << 8) | buffer[0]) >> 2;
         *temp = (value / 32) - 50;
-	return 0;
+	return st;
 }

@@ -26,5 +26,5 @@
 /***        fonctions Definition                                              ***/
 /****************************************************************************/
     void th02_begin();
-    int  th02_read_temp(int *temp);
+    int th02_read_temp(int *temp);
 #endif
