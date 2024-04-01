@@ -1,8 +1,9 @@
 #include "lib/i2c.h"
 #include "libshield/th02.h"
 
-#define delay_us(us)        timer_wait_us(_TIM3, us)
-
+#define delay_ms(ms)        timer_wait_ms(_TIM3, ms)
+#define TH02_REG_NONE		(0x04)
+static uint8_t last_reg = TH02_REG_NONE;
 
 void th02_begin() {
     // Initialize I2C interface
@@ -22,32 +23,30 @@ void th02_begin() {
 
 
 int th02_read_temp(int *temp) {
-    // I2C configuration
-    if (i2c_master_init(I2C1) != I2C_OK) {
-        // Handle I2C initialization error
-        return -1;
-    }
-
     // Start sequence
-    uint8_t config_data[2] = {REG_CONFIG, 0x11}; // Write CONFIG register (0x03) with 0x11
-    if (i2c_write(I2C1, TH02_ADDRESS, config_data, 2) != I2C_OK) {
-        // Handle I2C write error
-        return -1;
-    }
+    uint8_t buffer [2];
+    int st;
 
-    // Delay for temperature conversion
-    delay_us(35); 
-
-    // Read sequence
-    uint8_t data_buffer[2];
-    if (i2c_read(I2C1, TH02_ADDRESS, data_buffer, 2) != I2C_OK) {
-        // Handle I2C read error
-        return -1;
-    }
-
-    // Extract temperature value and convert to °C
-    uint16_t value = ((data_buffer[1] << 8) | data_buffer[0]) >> 4;
-    *temp = (value / 32) - 50;
-
-    return 0; // Success
+    if (1) {
+        last_reg = CMD_MEASURE_TEMP;
+        uint8_t config_data[2] = {REG_CONFIG,CMD_MEASURE_TEMP}; // Write CONFIG register (0x03) with 0x11
+        st = i2c_write(I2C1, TH02_ADDRESS, config_data, 2);
+        if(st==I2C_ERROR) return -1;
+    }else{
+        st = i2c_read(I2C1, TH02_ADDRESS,buffer, 2);
+        if(st==I2C_ERROR) return -1;
+    }if(st==I2C_OK){
+         // Delay for temperature conversion
+        delay_ms(35); 
+        // Read sequence
+        // Extract temperature value and convert to °C
+        for(int i = 0; i <  2; i++){
+            uart_printf(_USART2,"\r\ndata[%d] = %d",i,buffer[i]);
+        }
+        uint16_t value = ((buffer[1] << 8) | buffer[0]) >> 2;
+        *temp = (value / 32) - 50;
+    } else {
+		*temp=0;
+	}
+	return st;
 }

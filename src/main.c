@@ -24,7 +24,7 @@ int main(void)
 
 	uart_init(_USART2, 115200, UART_8N1, on_rx_cb);
 	i2c_master_init(_I2C1);
-	//th02_begin();
+	th02_begin();
 
 	while(1) {
 #ifdef MMA0
@@ -34,7 +34,7 @@ int main(void)
 		switch (cmd) {
 		case 't': // get current temperature
 			th02_read_temp(&temp);
-			cmd=0;
+			//cmd=0;
 			PE=temp>>3;
 			PF=(temp&0x7)*1000/8;
 			uart_printf(_USART2,"\n\rLa température est %d.%d°C",PE,PF); //temp,temp
