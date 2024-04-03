@@ -4,7 +4,7 @@
 #include "lib/util.h"
 #include "lib/i2c.h"
 
-#define COLORSENSOR
+#define TEMP_HUMIDITYSENSOR
 
 
 volatile char cmd;
