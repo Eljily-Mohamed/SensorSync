@@ -3,34 +3,44 @@
 #include "lib/uart.h"
 #include "lib/util.h"
 #include "lib/i2c.h"
+#include "lib/timer.h"
 
-#define COLORSENSOR
+#define TEMP_HUMIDITYSENSOR
 
+
+#ifdef TEMP_HUMIDITYSENSOR
+
+#include "libshield/TH02_dev.h"
+
+
+// #define delay_us(us)        timer_wait_us(_TIM3,us,NULL)
 
 volatile char cmd;
-#ifdef TEMP_HUMIDITYSENSOR
-#include "libshield/th02.h"
-static void on_rx_cb(char c)
-{
-	cmd = c;
+
+static void on_rx_cb(char c) {
+    cmd = c;
 }
 
-int main(void)
-{
-	int temp,PE,PF;
+int main(void) {
+    int temp;
+    // Initialize UART and I2C
+    uart_init(_USART2, 115200, UART_8N1, on_rx_cb);
+    // Initialize TH02 sensor
+    TH02_dev_begin();
+    //while(1) {
 
-	uart_init(_USART2, 115200, UART_8N1, on_rx_cb);
-	i2c_master_init(_I2C1);
-	th02_begin();
-
-	while(1) {
-			th02_read_temp(&temp);
-			//PE=temp>>3;
-			//PF=(temp&0x7)*1000/8;
-			uart_printf(_USART2,"\n\rLa température est %d.%d°C",temp,temp); //temp,temp
-	}
-	return 0;
+        // Read temperature from TH02 sensor
+        temp = TH02_dev_ReadTemperature();
+        
+        // Print temperature
+        uart_printf(_USART2, "\n\rTemperature: %d°C\n", temp);
+        
+        // delay_us(100);
+    //}
+    
+    return 0;
 }
+
 #endif
 
 #ifdef COLORSENSOR

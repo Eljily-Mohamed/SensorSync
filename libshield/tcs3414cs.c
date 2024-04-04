@@ -13,7 +13,7 @@ void tcs3414cs_init(){
     // Ecriture du byte de configuration pour régler le temps d'intégration
     uint8_t control_byte = TCS3414CS_REG_CONTROL; 
 
-    if (i2c_write(I2C1, TCS3414CS_ADDR << 1, &control_byte, 1) != I2C_OK) {
+    if (i2c_write(I2C1, TCS3414CS_ADDR,control_byte, 1) != I2C_OK) {
         // Erreur d'écriture i2c
         uart_puts(_USART2,"Erreur: Impossible d'écrire au capteur\n");
         return;

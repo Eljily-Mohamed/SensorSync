@@ -1,13 +1,12 @@
-#ifndef _TH02_H
-#define _TH02_H
+#ifndef _TH02_DEV_H
+#define _TH02_DEV_H
 
-#include "include/board.h"
+#include <stdint.h>
 
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
 /****************************************************************************/
-
-#define TH02_ADDRESS		(0x40)
+#define TH02_I2C_DEV_ID      0x40
 #define REG_STATUS           0x00
 #define REG_DATA_H           0x01
 #define REG_DATA_L           0x02
@@ -17,14 +16,20 @@
 #define STATUS_RDY_MASK      0x01    //poll RDY,0 indicate the conversion is done
 
 #define CMD_MEASURE_HUMI     0x01    //perform a humility measurement
-#define CMD_MEASURE_TEMP     0x11    //perform a temperature measurement
-
-#define TH02_WR_REG_MODE      0xC0
-#define TH02_RD_REG_MODE      0x80
+#define CMD_MEASURE_TEMP     0xb    //perform a temperature measurement
 
 /****************************************************************************/
-/***        fonctions Definition                                              ***/
+/***        Function Definitions                                          ***/
 /****************************************************************************/
-    void th02_begin();
-    int th02_read_temp(int *temp);
+
+void TH02_dev_begin(void);
+uint8_t TH02_dev_isAvailable(void);
+int TH02_dev_ReadTemperature(void);
+int TH02_dev_ReadHumidity(void);
+void TH02_dev_IIC_WriteCmd(uint8_t u8Cmd);
+uint8_t TH02_dev_IIC_ReadReg(uint8_t u8Reg);
+void TH02_dev_IIC_WriteReg(uint8_t u8Reg, uint8_t u8Data);
+uint16_t TH02_dev_IIC_ReadData(uint8_t u8Reg, uint8_t num);
+uint16_t TH02_dev_IIC_ReadData2byte(uint8_t u8Reg, uint8_t num);
+
 #endif
