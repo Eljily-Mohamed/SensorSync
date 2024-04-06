@@ -5,38 +5,34 @@
 #include "lib/i2c.h"
 #include "lib/timer.h"
 
-#define TEMP_HUMIDITYSENSOR
+#define COLORSENSOR
 
+
+volatile char cmd;
 
 #ifdef TEMP_HUMIDITYSENSOR
 
-#include "libshield/TH02_dev.h"
-
-
 // #define delay_us(us)        timer_wait_us(_TIM3,us,NULL)
-
-volatile char cmd;
 
 static void on_rx_cb(char c) {
     cmd = c;
 }
 
 int main(void) {
-    int temp;
+    int temp,PE,PF;
     // Initialize UART and I2C
     uart_init(_USART2, 115200, UART_8N1, on_rx_cb);
     // Initialize TH02 sensor
     TH02_dev_begin();
-    //while(1) {
-
-        // Read temperature from TH02 sensor
+    while(1){
+		   // Read temperature from TH02 sensor
         temp = TH02_dev_ReadTemperature();
-        
-        // Print temperature
-        uart_printf(_USART2, "\n\rTemperature: %d°C\n", temp);
-        
+        PE=temp>>3;
+		PF=(temp&0x7)*1000/8;
+		uart_printf(_USART2,"\n\rLa température est %d.%d°C",PE,PF); //temp,temp
+		
         // delay_us(100);
-    //}
+	}
     
     return 0;
 }
