@@ -53,7 +53,7 @@ int main(void) {
             uart_printf(_USART2,"error reading measurement\n");
         }
 
-       delay_us(1000000); /* sleep 1s */
+       delay_us(100000000); /* sleep 1s */
     }
     return 0;
 }
