@@ -1,7 +1,8 @@
 #include "libshield/sht4x.h"
 #include "lib/i2c.h"
+#include "lib/timer.h"
 
-#define delay_us(us)        timer_wait_ms(_TIM3, us)
+#define delay_us(us)        timer_wait_us(_TIM3, us, NULL)
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #define SHT4X_CMD_MEASURE_HPM 0xFD
@@ -25,7 +26,7 @@ int16_t sht4x_measure_blocking_read(int32_t* temperature, int32_t* humidity) {
 }
 
 int16_t sht4x_measure(void) {
-    return sensirion_i2c_write(SHT4X_ADDRESS, &sht4x_cmd_measure, 1);
+    return i2c_write(I2C1,SHT4X_ADDRESS, &sht4x_cmd_measure, 1);
 }
 
 int16_t sht4x_read(int32_t* temperature, int32_t* humidity) {
@@ -69,8 +70,7 @@ int16_t sht4x_read_serial(uint32_t* serial) {
         return ret;
 
     delay_us(SHT4X_CMD_DURATION_USEC);
-    ret = i2c_read(I2C1,SHT4X_ADDRESS, serial_words,
-                                   SENSIRION_NUM_WORDS(serial_words));
+    ret = i2c_read(I2C1,SHT4X_ADDRESS, serial_words,SENSIRION_NUM_WORDS(serial_words));
     *serial = ((uint32_t)serial_words[0] << 16) | serial_words[1];
 
     return ret;

@@ -79,6 +79,13 @@ void sht4x_enable_low_power_mode(uint8_t enable_low_power_mode);
 int16_t sht4x_read_serial(uint32_t* serial);
 
 /**
+ * Return the driver version
+ *
+ * @return Driver version string
+ */
+const char* sht4x_get_driver_version(void);
+
+/**
  * Returns the configured SHT4x address.
  *
  * @return SHT4x_ADDRESS
