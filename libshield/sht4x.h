@@ -37,7 +37,7 @@ int16_t sht4x_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht4x_measure_blocking_read(int32_t* temperature, int32_t* humidity);
+int16_t sht4x_measure_blocking_read(float* temperature, float* humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht4x_read() to read out the
@@ -61,7 +61,7 @@ int16_t sht4x_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht4x_read(int32_t* temperature, int32_t* humidity);
+int16_t sht4x_read(float* temperature, float* humidity);
 
 /**
  * Enable or disable the SHT's low power mode

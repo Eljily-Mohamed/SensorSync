@@ -13,12 +13,12 @@ typedef void (*OnTick)(void);
 /* timer_wait_ms
  *   wait for ms millisecoonds function
  */
-int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb);
+int timer_wait_ms(TIM_t *tmr, uint32_t ms);
 
 /* timer_wait_us
  *   wait for us microsecoonds function
  */
-int timer_wait_us(TIM_t *tmr, uint32_t us, OnTick cb);
+int timer_wait_us(TIM_t *tmr, uint32_t us);
 
 /***************************************************************************/
 /* timer_tick_init
@@ -58,9 +58,9 @@ uint32_t timer_read(TIM_t *tmr);
 #define PWM_CHANNEL_4		3
 
 /* pwm_init
- *   setup pwm timer period, each tick_ms
+ *   setup pwm timer with period_us us period
  */
-int pwm_init(PWM_t *pwm, uint32_t period_ms, OnTick cb);
+int pwm_init(PWM_t *pwm, uint32_t period_us);
 
 /* pwm_channel_enable
  *   set up pwm channel
@@ -88,9 +88,6 @@ int pwm_channel_set(PWM_t *pwm, uint32_t channel, uint32_t dutycycle);
 #define pwm_stop(pwm)	timer_stop(pwm)
 
 /***************************************************************************/
-#define TIM_IN_RISING
-#define TIM_IN_FALLING
-
 
 #ifdef __cplusplus
 }

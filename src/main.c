@@ -6,7 +6,7 @@
 #include "lib/timer.h"
 
 #define TEMP_HUMIDITYSENSOR
-#define delay_us(us)        timer_wait_us(_TIM3, us, NULL)
+#define delay_us(us)        timer_wait_us(_TIM3, us)
 
 
 volatile char cmd;
@@ -36,24 +36,35 @@ int main(void) {
     uart_printf(_USART2,"SHT sensor probing successful\n");
 
     while (1) {
-        int32_t temperature, humidity , PF, PE;
+        float temperature, humidity;
         cls();
         /* Measure temperature and relative humidity and store into variables
          * temperature, humidity (each output multiplied by 1000).
          */
         int8_t ret = sht4x_measure_blocking_read(&temperature, &humidity);
         if (ret == 0) {
-            lcd_printf("Temperature %d\n", temperature/1000);
-            temperature /= 1000;
-            PE=temperature>>3;
-			PF=(temperature&0x7)*1000/8;
-            uart_printf(_USART2,"\r\nmeasured temperature: %d.%d C",PE, PF);
+            /////////////////////////////////////
+            int partieEntiere = (int) temperature;
+            float partieFractionnaire = temperature - partieEntiere;
+            //convertor partie Fractionnaire en entiere
+            int partieFractionnaireEntier = (int) (partieFractionnaire * 1000);
+            /////////////////////////////////////////////
+             int partieEntiereH = (int) humidity;
+            float partieFractionnaireH = humidity - partieEntiereH;
+            //convertor partie Fractionnaire en entiere
+            int partieFractionnaireEntierH = (int) (partieFractionnaireH * 1000);
+            ///////////////////////////////////////////////
+          
+            lcd_printf("Temperature %d.%d\n",partieEntiere,partieFractionnaireEntier);
+            lcd_printf("Humidity %d.%d\n",partieEntiereH,partieFractionnaireEntierH);
+            uart_printf(_USART2,"\r\nmeasured temperature: %d.%d C",partieEntiere,partieFractionnaireEntier);
+            uart_printf(_USART2,"\r\nmeasured Humidity: %d.%d C",partieEntiereH,partieFractionnaireEntierH);
+            delay_us(10000000); /* sleep 1s */
             //uart_printf(_USART2,"\r\nmeasured humidity: %d RH \n",humidity / 1000);
         } else {
             uart_printf(_USART2,"error reading measurement\n");
         }
 
-       delay_us(100000000); /* sleep 1s */
     }
     return 0;
 }

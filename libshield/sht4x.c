@@ -2,7 +2,7 @@
 #include "lib/i2c.h"
 #include "lib/timer.h"
 
-#define delay_us(us)        timer_wait_us(_TIM3, us, NULL)
+#define delay_us(us)        timer_wait_us(_TIM3, us)
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #define SHT4X_CMD_MEASURE_HPM 0xFD
@@ -15,7 +15,7 @@
 static uint8_t sht4x_cmd_measure = SHT4X_CMD_MEASURE_HPM;
 static uint16_t sht4x_cmd_measure_delay_us = SHT4X_MEASUREMENT_DURATION_USEC;
 
-int16_t sht4x_measure_blocking_read(int32_t* temperature, int32_t* humidity) {
+int16_t sht4x_measure_blocking_read(float* temperature, float* humidity) {
     int16_t ret;
 
     ret = sht4x_measure();
@@ -29,17 +29,23 @@ int16_t sht4x_measure(void) {
     return i2c_write(I2C1,SHT4X_ADDRESS, &sht4x_cmd_measure, 1);
 }
 
-int16_t sht4x_read(int32_t* temperature, int32_t* humidity) {
+int16_t sht4x_read(float* temperature, float* humidity) {
+    uint16_t rawTemp, rawHumd;
     uint16_t words[2];
     int16_t ret = i2c_read(I2C1,SHT4X_ADDRESS,words,SENSIRION_NUM_WORDS(words));
+
     /**
      * formulas for conversion of the sensor signals, optimized for fixed point
      * algebra:
      * Temperature = 175 * S_T / 65535 - 45
      * Relative Humidity = 125 * (S_RH / 65535) - 6
      */
-    *temperature = ((21875 * (int32_t)words[0]) >> 13) - 45000;
-    *humidity = ((15625 * (int32_t)words[1]) >> 13) - 6000;
+
+    rawTemp = ((uint16_t) words[0] << 8) | words[1];
+    rawHumd = ((uint16_t) words[2] << 8) | words[3];
+
+    *temperature = (-45.0f + 175.0f * (rawTemp / 65535.0f));
+    *humidity = (-6.0f + 125.0f * (rawHumd / 65535.0f)); // corrected formula
 
     return ret;
 }
