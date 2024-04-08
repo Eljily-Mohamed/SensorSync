@@ -45,7 +45,7 @@ int16_t sht4x_read(float* temperature, float* humidity) {
     rawHumd = ((uint16_t) words[2] << 8) | words[3];
 
     *temperature = (-45.0f + 175.0f * (rawTemp / 65535.0f));
-    *humidity = (-6.0f + 125.0f * (rawHumd / 65535.0f)); // corrected formula
+    *humidity = (-6.0f + 125.0f * (rawHumd / 65535.0f)); 
 
     return ret;
 }

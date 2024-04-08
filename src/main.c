@@ -86,13 +86,13 @@ int main(void) {
 	tcs34725_init();
 	while (1) {
 
-		uint16_t r, g, b, c, colorTemp, lux;
+		uint16_t r, g, b, c, colorTemp ,lux;
 
 		tcs34725_read_color(&r, &g, &b, &c);
 		colorTemp=calculateColorTemperature(r,g,b);
-
-		//uart_printf(_USART2,"\r\nTemperature en Kelvin: %d\n", colorTemp);
-
+        lux=calculateLux(r,g,b);
+		uart_printf(_USART2,"\r\nTemperature en Kelvin: %d\n", colorTemp);
+        uart_printf(_USART2,"\r\nIlluminance en Lux: %d\n",lux);
         delay_us(10000000);
 	}
 
