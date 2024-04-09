@@ -101,7 +101,7 @@ void tcs34725_init(void) {
 
    // delay_us(SAMPLING_PERIOD);
 
-    uart_puts(_USART2, "\n\rTCS34725 I2C Color Sensor bien initialisé\n");
+    //uart_puts(_USART2, "\n\rTCS34725 I2C Color Sensor bien initialisé\n");
     return;
 }
 

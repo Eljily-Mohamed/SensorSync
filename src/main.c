@@ -5,6 +5,7 @@
 #include "lib/i2c.h"
 #include "lib/timer.h"
 #include "libshield/sht4x.h"
+#include "libshield/tcs34725.h"
 
 #define MAIN_GLOBAL_INIT
 
