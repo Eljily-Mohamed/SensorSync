@@ -9,6 +9,8 @@
 
 #define MAIN_GLOBAL_INIT
 
+#define TEST_IHM
+
 #ifdef MAIN_GLOBAL_INIT
 
 #define DELAY_1_SECOND      1000000
@@ -54,8 +56,18 @@ int main(void) {
                     int temp_int_frac = (int)(temp_frac * 1000);
                     int hum_int_frac = (int)(hum_frac * 1000);
 
-                    uart_printf(_USART2, "\r\nMeasured temperature: %d.%d C", temp_int, temp_int_frac);
-                    uart_printf(_USART2, "\r\nMeasured humidity: %d.%d C", hum_int, hum_int_frac);
+                    //test IHM
+                    #ifndef TEST_IHM
+                        uart_printf(_USART2, "\r\nMeasured temperature: %d.%d C", temp_int, temp_int_frac);
+                        uart_printf(_USART2, "\r\nMeasured humidity: %d.%d C", hum_int, hum_int_frac);
+                    #endif
+                   
+
+                    //test IHM
+                    #ifdef TEST_IHM
+                       uart_printf(_USART2, "\r\n%d.%d", temp_int, temp_int_frac);
+                    #endif
+
                     delay_us(DELAY_1_SECOND); // Sleep 1s
                 } else {
                     uart_printf(_USART2, "Error reading measurement\n");
