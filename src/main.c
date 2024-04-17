@@ -29,7 +29,7 @@ int main(void) {
     i2c_master_init(_I2C1);
     lcd_reset();
     cls();
-    tcs34725_init();
+    //tcs34725_init();
 
     while (sht4x_probe() != 0) {
         uart_printf(_USART2, "SHT sensor probing failed\n");
@@ -38,7 +38,7 @@ int main(void) {
 
     while (1) {
         #ifdef MAIN_GLOBAL_INIT
-        uart_printf(_USART2, "\r\nEntrez une commande : ");
+        //uart_printf(_USART2, "\r\nEntrez une commande : ");
         #endif
 
         while (!command);
