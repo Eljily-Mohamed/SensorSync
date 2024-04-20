@@ -68,7 +68,7 @@ int main(void) {
                        uart_printf(_USART2, "\r\n%d.%d", temp_int, temp_int_frac);
                     #endif
 
-                    delay_us(DELAY_1_SECOND); // Sleep 1s
+                    delay_us(DELAY_1_SECOND); // Sleep 10s
                 } else {
                     uart_printf(_USART2, "Error reading measurement\n");
                 }
