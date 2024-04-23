@@ -140,10 +140,11 @@
  * USART Pin and use configuration:
  ****************************************************************************/
 
-//#define USE_USART1
-//#define USART1_GPIO_PORT
-//#define USART1_GPIO_PINS
-//#define USART1_GPIO_CFG
+// USART2: Tx --> PA6, Rx --> PA7
+#define USE_USART1
+#define USART1_GPIO_PORT            GPIOA
+#define USART1_GPIO_PINS            PIN_6|PIN_7
+#define USART1_GPIO_CFG             PIN_MODE_ALTFUNC | PIN_OPT_AF7
 
 // USART2: Tx --> PA2, Rx --> PA3
 #define USE_USART2
