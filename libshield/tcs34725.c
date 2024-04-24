@@ -9,6 +9,7 @@
 
 tcs34725IntegrationTime_t _tcs34725IntegrationTime = TCS34725_INTEGRATIONTIME_700MS;
 tcs34725Gain_t _tcs34725Gain = TCS34725_GAIN_1X;
+
 void write8(uint8_t reg, uint8_t value) {
     uint8_t data[2];
     data[0] = TCS34725_COMMAND_BIT | reg;
