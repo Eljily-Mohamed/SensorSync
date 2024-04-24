@@ -76,13 +76,17 @@ int main(void) {
             }
             case 'c': {// Get current color
                 uint16_t red, green, blue, clear, color_temp, lux;
+
                 tcs34725_read_color(&red, &green, &blue, &clear);
                 color_temp = calculateColorTemperature(red, green, blue);
                 lux = calculateLux(red, green, blue);
 
                 uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
                 uart_printf(_USART2, "\r\nIlluminance en Lux: %d\n", lux);
+                // Afficher le code hexadécimal de la couleur
+                uart_printf(_USART2,"Hexadecimal color: %s\n", hex_color(red,green,blue));
                 delay_us(DELAY_10_SECONDS); // Sleep 10s
+
                 break;
             }
         }

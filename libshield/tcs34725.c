@@ -111,7 +111,7 @@ void tcs34725_read_color(uint16_t *red, uint16_t *green, uint16_t *blue, uint16_
     *red = read16(TCS34725_RDATAL);
     *green = read16(TCS34725_GDATAL);
     *blue = read16(TCS34725_BDATAL);
-
+    
     uint8_t atime_reg = read8(TCS34725_ATIME);
     uint16_t integration_time = (256 - atime_reg) * 2.4;
 
@@ -137,6 +137,20 @@ void tcs34725_read_color(uint16_t *red, uint16_t *green, uint16_t *blue, uint16_
         default:
             break;
     }
+}
+
+char hex_color(uint16_t r, uint16_t g, uint16_t b){
+    uint32_t color = (b << 16) | (g << 8) | r;
+    // on a besoin de 6 digits 
+    char hex_color_code[7] = "#";
+
+    // remplacer sprintf
+    for (int i = 0; i < 6; i++) {
+        uint8_t n = (color >> (4 * i)) & 0xF; 
+        hex_color_code[i + 1] = (n < 10) ? (n + '0') : (n - 10 + 'A'); 
+    }
+
+    return hex_color_code;
 }
 
 float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b) {
@@ -173,6 +187,7 @@ float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b) {
     float cct = ((437 * n * n * n) + (3601 * n * n) + (6861 * n) + 5517);
     return cct;
 }
+
 float calculateLux(uint16_t r, uint16_t g, uint16_t b) {
     float illuminance;
 
