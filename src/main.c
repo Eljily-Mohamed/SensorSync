@@ -82,8 +82,7 @@ int main(void) {
                 color_temp = calculateColorTemperature(red, green, blue, &x, &y);
                 lux = calculateLux(red, green, blue);
 
-                uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
-
+                
                 // Convertir les coordonnées chromatiques en parties entières et décimales
                 int x_int =(int)x;
                 float x_frac = x-x_int;
@@ -92,12 +91,10 @@ int main(void) {
                 float y_frac = y-y_int;
                 int y_frac_int= (int)(y_frac*1000);
 
+
                 // Afficher (x,y) avec illuminance (color + brightness  )
                 uart_printf(_USART2, "\r\nx = %d.%d , y= %d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
-
-                // Afficher le code hexadécimal de la couleur
-                uart_printf(_USART2,"Hexadecimal color: %s\n", hex_color(red,green,blue));
-
+                uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
 
                 delay_us(DELAY_1_SECOND); // Sleep 1s
 

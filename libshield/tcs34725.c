@@ -100,8 +100,8 @@ void tcs34725_init(void) {
     write8(TCS34725_ATIME, config.integration_time);
     write8(TCS34725_CONTROL, config.gain);
 
-   // delay_us(SAMPLING_PERIOD);
-
+    // delay_us(SAMPLING_PERIOD);
+    
     //uart_puts(_USART2, "\n\rTCS34725 I2C Color Sensor bien initialisé\n");
     return;
 }
@@ -137,20 +137,6 @@ void tcs34725_read_color(uint16_t *red, uint16_t *green, uint16_t *blue, uint16_
         default:
             break;
     }
-}
-
-char hex_color(uint16_t r, uint16_t g, uint16_t b){
-    uint32_t color = (b << 16) | (g << 8) | r;
-    // on a besoin de 6 digits 
-    char hex_color_code[7] = "#";
-
-    // remplacer sprintf
-    for (int i = 0; i < 6; i++) {
-        uint8_t n = (color >> (4 * i)) & 0xF; 
-        hex_color_code[i + 1] = (n < 10) ? (n + '0') : (n - 10 + 'A'); 
-    }
-
-    return hex_color_code;
 }
 
 float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b, float *x, float *y) {
