@@ -153,35 +153,24 @@ char hex_color(uint16_t r, uint16_t g, uint16_t b){
     return hex_color_code;
 }
 
-float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b) {
+float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b, float *x, float *y) {
     float X, Y, Z;
-	float x, y;
-	float XYZ_sum;
-	
-	X = (-0.14282f * r + 1.54924f * g - 0.95641f * b);
+    float XYZ_sum;
+
+    X = (-0.14282f * r + 1.54924f * g - 0.95641f * b);
 	Y = (-0.32466f * r + 1.57837f * g - 0.73191f * b);
 	Z = (-0.68202f * r + 0.77073f * g + 0.56332f * b);
 
-	
-	XYZ_sum = X + Y + Z;
-	if (XYZ_sum != 0) {
-			x = (X) / XYZ_sum; 
-			y = (Y) / XYZ_sum; 
-	} else {
-			x = 5000; // valeur par défaut
-			y = 5000; // valeur par défaut
-	}
-	int x_int =(int)x;
-	float x_frac = x-x_int;
-    int x_frac_int = (int)(x_frac * 1000);
-	int y_int = (int)y;
-	float y_frac = y-y_int;
-    int y_frac_int= (int)(y_frac*1000);
+    XYZ_sum = X + Y + Z;
+    if (XYZ_sum != 0) {
+        *x = X / XYZ_sum;
+        *y = Y / XYZ_sum;
+    } else {
+        *x = 5000; // Valeur par défaut
+        *y = 5000; // Valeur par défaut
+    }
 
-    // Afficher les valeurs x et y
-	uart_printf(_USART2, "\r\nx = %d.%d , y= %d.%d\r\n",x_int,x_frac_int,y_int,y_frac_int);
-
-    float n = (x-0.3320f)/(0.1858f-y);
+    float n = (*x - 0.3320f) / (0.1858f - *y);
 
     // Calculer cct
     float cct = ((437 * n * n * n) + (3601 * n * n) + (6861 * n) + 5517);

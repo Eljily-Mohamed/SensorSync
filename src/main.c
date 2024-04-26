@@ -76,16 +76,30 @@ int main(void) {
             }
             case 'c': {// Get current color
                 uint16_t red, green, blue, clear, color_temp, lux;
+                float x, y;
 
                 tcs34725_read_color(&red, &green, &blue, &clear);
-                color_temp = calculateColorTemperature(red, green, blue);
+                color_temp = calculateColorTemperature(red, green, blue, &x, &y);
                 lux = calculateLux(red, green, blue);
 
                 uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
-                uart_printf(_USART2, "\r\nIlluminance en Lux: %d\n", lux);
+
+                // Convertir les coordonnées chromatiques en parties entières et décimales
+                int x_int =(int)x;
+                float x_frac = x-x_int;
+                int x_frac_int = (int)(x_frac * 1000);
+                int y_int = (int)y;
+                float y_frac = y-y_int;
+                int y_frac_int= (int)(y_frac*1000);
+
+                // Afficher (x,y) avec illuminance (color + brightness  )
+                uart_printf(_USART2, "\r\nx = %d.%d , y= %d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
+
                 // Afficher le code hexadécimal de la couleur
                 uart_printf(_USART2,"Hexadecimal color: %s\n", hex_color(red,green,blue));
-                delay_us(DELAY_10_SECONDS); // Sleep 10s
+
+
+                delay_us(DELAY_1_SECOND); // Sleep 1s
 
                 break;
             }

@@ -90,7 +90,7 @@ void setGain(tcs34725Gain_t gain);
 void enable(void);
 void tcs34725_init(void);
 void tcs34725_read_color(uint16_t *red, uint16_t *green, uint16_t *blue, uint16_t *clear);
-float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b);
+float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b, float *x, float *y);
 float calculateLux(uint16_t r, uint16_t g, uint16_t b);
 char hex_color(uint16_t r, uint16_t g, uint16_t b);
 
