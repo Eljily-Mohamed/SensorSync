@@ -93,7 +93,7 @@ int main(void) {
 
 
                 // Afficher (x,y) avec illuminance (color + brightness  )
-                uart_printf(_USART2, "\r\nx = %d.%d , y= %d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
+                uart_printf(_USART2, "\r\nx = %d.%d , y=%d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
                 uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
 
                 delay_us(DELAY_1_SECOND); // Sleep 1s
