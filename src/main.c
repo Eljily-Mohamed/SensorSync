@@ -29,7 +29,7 @@ int main(void) {
     i2c_master_init(_I2C1);
     lcd_reset();
     cls();
-    //tcs34725_init();
+    tcs34725_init();
 
     while (sht4x_probe() != 0) {
         uart_printf(_USART2, "SHT sensor probing failed\n");
@@ -56,19 +56,11 @@ int main(void) {
                     int temp_int_frac = (int)(temp_frac * 1000);
                     int hum_int_frac = (int)(hum_frac * 1000);
 
-                    //test IHM
-                    #ifndef TEST_IHM
-                        uart_printf(_USART2, "\r\nMeasured temperature: %d.%d C", temp_int, temp_int_frac);
-                        uart_printf(_USART2, "\r\nMeasured humidity: %d.%d C", hum_int, hum_int_frac);
-                    #endif
-                   
+                    uart_printf(_USART2, "\r\ntemperature: %d.%d C", temp_int, temp_int_frac);
+                    uart_printf(_USART2, "\r\nhumidity: %d.%d", hum_int, hum_int_frac);
 
-                    //test IHM
-                    #ifdef TEST_IHM
-                       uart_printf(_USART2, "\r\n%d.%d", temp_int, temp_int_frac);
-                    #endif
+                    delay_us(DELAY_1_SECOND); // Sleep 1s
 
-                    delay_us(DELAY_1_SECOND); // Sleep 10s
                 } else {
                     uart_printf(_USART2, "Error reading measurement\n");
                 }
