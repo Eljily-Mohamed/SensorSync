@@ -22,19 +22,22 @@ volatile char command;
 
 static void on_command_received(char c) {
     command = c;
+    uart_printf(_USART1, "\r\nCommand received: %c\r\n", c);
 }
 
 int main(void) {
     uart_init(_USART2, 115200, UART_8N1, on_command_received);
+    uart_init(_USART1, 115200, UART_8N1, on_command_received);
     i2c_master_init(_I2C1);
     lcd_reset();
     cls();
-    tcs34725_init();
+    
+    //tcs34725_init();
 
-    while (sht4x_probe() != 0) {
-        uart_printf(_USART2, "SHT sensor probing failed\n");
-        delay_us(DELAY_1_SECOND); // Sleep 1s
-    }
+    // while (sht4x_probe() != 0) {
+    //     uart_printf(_USART2, "SHT sensor probing failed\n");
+    //     delay_us(DELAY_1_SECOND); // Sleep 1s
+    // }
 
     while (1) {
         #ifdef MAIN_GLOBAL_INIT
@@ -90,6 +93,10 @@ int main(void) {
 
                 delay_us(DELAY_1_SECOND); // Sleep 1s
 
+                break;
+            }
+            case 'z': {
+                //uart_puts(_USART1,"llol");
                 break;
             }
         }

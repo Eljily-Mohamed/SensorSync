@@ -3,6 +3,6 @@ target remote localhost:3333
 load
 monitor reset halt
 tbreak main
-print/x *_USART1
-print/x *_USART2
+print/x *_GPIOA
+print/x *_GPIOB
 continue

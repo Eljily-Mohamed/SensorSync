@@ -86,16 +86,12 @@ int uart_init(USART_t *u, uint32_t baud, uint32_t mode, OnUartRx cb)
 		// enable USART clocking
 		_RCC->APB2ENR |= (1<<4); 
 		// configure Tx/Rx pins : Tx -->, Rx --> 
-		io_configure(USART1_GPIO_PORT, USART1_GPIO_PINS, USART1_GPIO_CFG, NULL);
-
-        /*Ajout*/		
+		io_configure(USART1_GPIO_PORT, USART1_GPIO_PINS, USART1_GPIO_CFG, NULL);		
         usart1_cb = cb;
 		irq_number = USART1_IRQn;
 		irq_priority = USART1_IRQ_PRIORITY;
-
 		// configure USART speed
-		u->BRR = sysclks.apb2_freq/baud;
-		
+		u->BRR = sysclks.apb2_freq/baud;	
 #else
 		return -1;
 #endif
@@ -106,10 +102,6 @@ int uart_init(USART_t *u, uint32_t baud, uint32_t mode, OnUartRx cb)
 		// configure Tx/Rx pins : Tx --> PA2, Rx --> PA3
 		io_configure(USART2_GPIO_PORT, USART2_GPIO_PINS, USART2_GPIO_CFG, NULL);
 		// equivalent to io_configure(_GPIOA, PIN_2|PIN_3, USART_PIN_CONFIG);
-		
-		//usart2_cb
-		//irq_number
-		//irq_priority
 		usart2_cb = cb;
 		irq_number = USART2_IRQn;
 		irq_priority = USART2_IRQ_PRIORITY;
