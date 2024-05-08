@@ -6,46 +6,37 @@
 #include "lib/timer.h"
 #include "libshield/sht4x.h"
 #include "libshield/tcs34725.h"
-
-#define MAIN_GLOBAL_INIT
-
-#define TEST_IHM
-
-#ifdef MAIN_GLOBAL_INIT
-
-#define DELAY_1_SECOND      1000000
-#define DELAY_10_SECONDS    10000000
-
-#define delay_us(us)        timer_wait_us(_TIM3, us)
+#include "constants.h"
 
 volatile char command;
 
 static void on_command_received(char c) {
     command = c;
-    uart_printf(_USART1, "\r\nCommand received: %c\r\n", c);
+}
+
+static void on_zegbee_command_received(char c) {
+    command = c;
 }
 
 int main(void) {
     uart_init(_USART2, 115200, UART_8N1, on_command_received);
-    uart_init(_USART1, 115200, UART_8N1, on_command_received);
+    uart_init(_USART1, 115200, UART_8N1, on_zegbee_command_received);
     i2c_master_init(_I2C1);
     lcd_reset();
     cls();
     
-    //tcs34725_init();
+    tcs34725_init();
 
-    // while (sht4x_probe() != 0) {
-    //     uart_printf(_USART2, "SHT sensor probing failed\n");
-    //     delay_us(DELAY_1_SECOND); // Sleep 1s
-    // }
+    while (sht4x_probe() != 0) {
+        uart_printf(UART_TO_USE, "SHT sensor probing failed\n");
+        delay_us(DELAY_1_SECOND); // Sleep 1s
+    }
 
     while (1) {
-        #ifdef MAIN_GLOBAL_INIT
-        //uart_printf(_USART2, "\r\nEntrez une commande : ");
+        #ifndef TEST_IHM
+            uart_printf(UART_TO_USE, "\r\nEntrez une commande : ");
         #endif
-
         while (!command);
-
         switch (command) {
             case 't': { // Get current temperature & humidity
                 float temperature, humidity;
@@ -59,13 +50,13 @@ int main(void) {
                     int temp_int_frac = (int)(temp_frac * 1000);
                     int hum_int_frac = (int)(hum_frac * 1000);
 
-                    uart_printf(_USART2, "\r\ntemperature: %d.%d C", temp_int, temp_int_frac);
-                    uart_printf(_USART2, "\r\nhumidity: %d.%d", hum_int, hum_int_frac);
+                    uart_printf(UART_TO_USE, "\r\ntemperature: %d.%d C", temp_int, temp_int_frac);
+                    uart_printf(UART_TO_USE, "\r\nhumidity: %d.%d", hum_int, hum_int_frac);
 
                     delay_us(DELAY_1_SECOND); // Sleep 1s
 
                 } else {
-                    uart_printf(_USART2, "Error reading measurement\n");
+                    uart_printf(UART_TO_USE, "Error reading measurement\n");
                 }
                 break;
             }
@@ -86,22 +77,20 @@ int main(void) {
                 float y_frac = y-y_int;
                 int y_frac_int= (int)(y_frac*1000);
 
-
+                #ifndef TEST_IHM
                 // Afficher (x,y) avec illuminance (color + brightness  )
-                uart_printf(_USART2, "\r\nx = %d.%d , y=%d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
-                uart_printf(_USART2, "\r\nTemperature en Kelvin: %d\n", color_temp);
+                uart_printf(UART_TO_USE, "\r\nx = %d.%d , y=%d.%d, illuminance=%d\r\n", x_int, x_frac_int, y_int, y_frac_int,lux);
+                uart_printf(UART_TO_USE, "\r\nTemperature en Kelvin: %d\n", color_temp);
+                #else
+                // Display x, y without illuminance
+                uart_printf(UART_TO_USE, "\r\n%d.%d,%d.%d,%d", x_int, x_frac_int, y_int, y_frac_int, lux);
+                #endif
 
                 delay_us(DELAY_1_SECOND); // Sleep 1s
 
-                break;
-            }
-            case 'z': {
-                //uart_puts(_USART1,"llol");
                 break;
             }
         }
     }
     return 0;
 }
-
-#endif
