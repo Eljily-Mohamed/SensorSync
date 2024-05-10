@@ -1,4 +1,5 @@
 #include "include/board.h"
+#include "include/constants.h"
 #include "lib/io.h"
 #include "lib/uart.h"
 #include "lib/util.h"
@@ -6,7 +7,9 @@
 #include "lib/timer.h"
 #include "libshield/sht4x.h"
 #include "libshield/tcs34725.h"
-#include "constants.h"
+
+#define delay_us(us)        timer_wait_us(_TIM3, us)
+
 
 volatile char command;
 

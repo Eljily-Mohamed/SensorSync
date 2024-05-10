@@ -32,6 +32,7 @@ int16_t sht4x_measure(void) {
 int16_t sht4x_read(float* temperature, float* humidity) {
     uint16_t rawTemp, rawHumd;
     uint16_t words[2];
+    //uni8_t words[4]
     int16_t ret = i2c_read(I2C1,SHT4X_ADDRESS,words,SENSIRION_NUM_WORDS(words));
 
     /**
@@ -43,6 +44,9 @@ int16_t sht4x_read(float* temperature, float* humidity) {
 
     rawTemp = ((uint16_t) words[0] << 8) | words[1];
     rawHumd = ((uint16_t) words[2] << 8) | words[3];
+
+    // rawTemp = ((uint16_t) words[0] << 8) | words[1];
+    // rawHumd = ((uint16_t) words[3] << 8) | words[4];
 
     *temperature = (-45.0f + 175.0f * (rawTemp / 65535.0f));
     *humidity = (-6.0f + 125.0f * (rawHumd / 65535.0f)); 

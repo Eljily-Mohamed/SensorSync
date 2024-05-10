@@ -28,8 +28,6 @@ int16_t sht4x_probe(void);
  * Starts a measurement and then reads out the results. This function blocks
  * while the measurement is in progress. The duration of the measurement depends
  * on the sensor in use, please consult the datasheet.
- * Temperature is returned in [degree Celsius], multiplied by 1000,
- * and relative humidity in [percent relative humidity], multiplied by 1000.
  *
  * @param temperature   the address for the result of the temperature
  * measurement
