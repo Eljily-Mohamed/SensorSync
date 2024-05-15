@@ -44,7 +44,7 @@ uint16_t read16(uint8_t reg) {
 
     uint8_t reg_data[1] = { TCS34725_COMMAND_BIT | reg };
     if (i2c_write(I2C1, TCS34725_ADDRESS, reg_data, 1) != I2C_OK) {
-        uart_puts(_USART2,"\n\rError during register write\n");
+        uart_puts(_USART2,"\n\rErreur lors de l'écriture dans le registre\n");
         return 0; 
     }
 

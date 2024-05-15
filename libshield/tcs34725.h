@@ -11,7 +11,7 @@
 #define TCS34725_ENABLE           (0x00)
 #define TCS34725_ENABLE_AIEN      (0x10)    /* RGBC Interrupt Enable */
 #define TCS34725_ENABLE_WEN       (0x08)    /* Wait enable - Writing 1 activates the wait timer */
-#define TCS34725_ENABLE_AEN       (0x02)    /* RGBC Enable - Writing 1 actives the ADC, 0 disables it */
+#define TCS34725_ENABLE_AEN       (0x02)    /* RGBC Enable - Writing 1 actives the ADC, 0 disables it (convertisseur analogique numerique)*/
 #define TCS34725_ENABLE_PON       (0x01)    /* Power on - Writing 1 activates the internal oscillator, 0 disables it */
 #define TCS34725_ATIME            (0x01)    /* Integration time */
 #define TCS34725_WTIME            (0x03)    /* Wait time (if TCS34725_ENABLE_WEN is asserted) */
@@ -92,7 +92,6 @@ void tcs34725_init(void);
 void tcs34725_read_color(uint16_t *red, uint16_t *green, uint16_t *blue, uint16_t *clear);
 float calculateColorTemperature(uint16_t r, uint16_t g, uint16_t b, float *x, float *y);
 float calculateLux(uint16_t r, uint16_t g, uint16_t b);
-char hex_color(uint16_t r, uint16_t g, uint16_t b);
 
 
 #endif /* TCS34725_H */
