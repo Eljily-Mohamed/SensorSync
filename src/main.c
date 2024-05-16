@@ -13,17 +13,27 @@
 
 volatile char command;
 
+void tmr_cb(void)
+{
+	// Acknowledge IRQ
+	_TIM2->SR &= ~0x1;
+}
+
 static void on_command_received(char c) {
     command = c;
 }
 
 static void on_zegbee_command_received(char c) {
     command = c;
+    uart_printf(UART_TO_USE, "\r\nZigbee command received : %c\r\n", c);
 }
+
+#define BLINK_SPEED_BASE    1000
 
 int main(void) {
     uart_init(_USART2, 115200, UART_8N1, on_command_received);
     uart_init(_USART1, 115200, UART_8N1, on_zegbee_command_received);
+    timer_tick_init(_TIM2, BLINK_SPEED_BASE , tmr_cb);
     i2c_master_init(_I2C1);
     lcd_reset();
     cls();
@@ -32,7 +42,7 @@ int main(void) {
 
     while (sht4x_probe() != 0) {
         uart_printf(UART_TO_USE, "SHT sensor probing failed\n");
-        delay_us(DELAY_1_SECOND); // Sleep 1s
+        timer_start(_TIM2);	 // Sleep 1s
     }
 
     while (1) {
@@ -56,7 +66,7 @@ int main(void) {
                     uart_printf(UART_TO_USE, "\r\ntemperature: %d.%d C", temp_int, temp_int_frac);
                     uart_printf(UART_TO_USE, "\r\nhumidity: %d.%d", hum_int, hum_int_frac);
 
-                    delay_us(DELAY_1_SECOND); // Sleep 1s
+                    timer_start(_TIM2);	 // Sleep 1s
 
                 } else {
                     uart_printf(UART_TO_USE, "Error reading measurement\n");
@@ -87,12 +97,11 @@ int main(void) {
                 #else
                 // Display x, y without illuminance
                 uart_printf(UART_TO_USE, "\r\n%d.%d,%d.%d,%d", x_int, x_frac_int, y_int, y_frac_int, lux);
+                timer_start(_TIM2);	 // Sleep 1s
                 #endif
-
-                delay_us(DELAY_1_SECOND); // Sleep 1s
-
                 break;
             }
+            timer_start(_TIM2);	 // Sleep 1s
         }
     }
     return 0;
