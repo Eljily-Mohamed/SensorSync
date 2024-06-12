@@ -2,7 +2,12 @@
   "C_Cpp.errorSquiggles": "disabled",
   "files.associations": {
     "board.h": "c",
-    "th02.h": "c"
+    "th02.h": "c",
+    "i2c.h": "c",
+    "sht4x.h": "c",
+    "stdint.h": "c",
+    "string_view": "c",
+    "constants.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

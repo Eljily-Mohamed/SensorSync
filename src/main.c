@@ -6,7 +6,6 @@
 #include "lib/i2c.h"
 #include "lib/timer.h"
 #include "libshield/sht4x.h"
-#include "libshield/tcs34725.h"
 
 #define delay_us(us)        timer_wait_us(_TIM3, us)
 
@@ -44,7 +43,7 @@ int main(void) {
         uart_printf(UART_TO_USE, "SHT sensor probing failed\n");
         timer_start(_TIM2);	 // Sleep 1s
     }
-
+  
     while (1) {
         #ifndef TEST_IHM
             uart_printf(UART_TO_USE, "\r\nEntrez une commande : ");
@@ -69,7 +68,7 @@ int main(void) {
                     timer_start(_TIM2);	 // Sleep 1s
 
                 } else {
-                    uart_printf(UART_TO_USE, "Error reading measurement\n");
+                    uart_printf(UART_TO_USE, "\r\nError reading measurement");
                 }
                 break;
             }

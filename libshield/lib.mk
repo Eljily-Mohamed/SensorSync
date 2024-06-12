@@ -3,4 +3,4 @@ UDEFS += -DUSE_MBEDSHIELD
 
 LIBSHIELD = libshield
 
-SRC += $(LIBSHIELD)/tcs34725.c  $(LIBSHIELD)/sht4x.c
+SRC += $(LIBSHIELD)/tcs34725.c  $(LIBSHIELD)/sht4x.c 
