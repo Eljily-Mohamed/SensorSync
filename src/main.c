@@ -9,6 +9,7 @@
 
 #define delay_us(us)        timer_wait_us(_TIM3, us)
 
+static USART_t *UART_TO_USE = (USART_t *)USART2_BASE; // Default UART is _USART2 for ST-LINK
 
 volatile char command;
 
@@ -20,18 +21,20 @@ void tmr_cb(void)
 
 static void on_command_received(char c) {
     command = c;
+    uart_printf(UART_TO_USE, "\r\rcommand received : %c\r\n", command);
+    if (c == 'S') {
+        UART_TO_USE = _USART2; 
+    } else if (c == 'Z') {
+        UART_TO_USE = _USART1; 
+    }
 }
 
-static void on_zegbee_command_received(char c) {
-    command = c;
-    uart_printf(UART_TO_USE, "\r\nZigbee command received : %c\r\n", c);
-}
 
 #define BLINK_SPEED_BASE    1000
 
 int main(void) {
     uart_init(_USART2, 115200, UART_8N1, on_command_received);
-    uart_init(_USART1, 115200, UART_8N1, on_zegbee_command_received);
+    uart_init(_USART1, 115200, UART_8N1, on_command_received);
     timer_tick_init(_TIM2, BLINK_SPEED_BASE , tmr_cb);
     i2c_master_init(_I2C1);
     lcd_reset();
@@ -100,6 +103,8 @@ int main(void) {
                 #endif
                 break;
             }
+            case 'S':
+
             timer_start(_TIM2);	 // Sleep 1s
         }
     }
