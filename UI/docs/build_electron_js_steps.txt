@@ -1,0 +1,38 @@
+apt install wine rpm -y
+npm install -g electron-builder
+index.html puis index.js
+package.json: 
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"electron-builder"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.2.0",
+    "electron-builder": "^22.11.1"
+  },
+  "build":{
+    "linux":{
+      "target":[
+        "AppImage",
+        "deb",
+        "rpm",
+        "snap"
+      ]
+    }
+  }
+
+}
+npm run build
+mkdir my-electron-app-extracted  # Create a directory to extract the contents
+cd my-electron-app-extracted     # Move into the directory
+./path/to/your/AppImage --appimage-extract  # Replace './path/to/your/AppImage' with the actual path to your AppImage
+cd my-electron-app-extracted
+./AppRun
+

@@ -19,6 +19,7 @@ void tmr_cb(void)
 	_TIM2->SR &= ~0x1;
 }
 
+
 static void on_command_received(char c) {
     command = c;
     uart_printf(UART_TO_USE, "\r\rcommand received : %c\r\n", command);
