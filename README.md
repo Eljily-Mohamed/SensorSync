@@ -42,6 +42,9 @@ The project documentation is generated with MkDocs and can be found in the `docs
 
    Open a web browser and go to `http://127.0.0.1:8000` to view the documentation.
 
+## Demo
+Visit the demo [here](https://www.linkedin.com/posts/douae-choubri_systaeymesembarquaezs-stm32-iot-ugcPost-7211099812744593408-8UHB?utm_source=share&utm_medium=member_desktop).
+
 ## Contributing
 
 If you want to contribute to this project, please follow these steps:
