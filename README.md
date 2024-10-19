@@ -55,6 +55,11 @@ If you want to contribute to this project, please follow these steps:
 4. Push to the branch (`git push origin feature-branch`).
 5. Create a new Pull Request.
 
+## Demo
+
+You can watch the project demonstration video [here](demo/demo.mp4).
+
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
